@@ -657,7 +657,8 @@
   html.style-bold .log-entry { padding: 13px 0; border-bottom: 1px solid var(--border); }
   html.style-bold .log-name { font-weight: 700; }
   html.style-bold .log-kcal { font-size: 18px; }
-  html.style-bold nav { position: fixed; bottom: calc(20px + var(--safe-bottom)); left: 50%; transform: translateX(-50%); width: auto; border-top: none; background: #15161b; border-radius: 28px; padding: 8px 20px; box-shadow: 0 4px 24px rgba(0,0,0,.6); }
+  html.style-bold nav { position: fixed; bottom: calc(20px + var(--safe-bottom)); left: 50%; transform: translateX(-50%); width: auto; border-top: none; background: #15161b; border-radius: 28px; padding: 8px 20px; box-shadow: 0 4px 24px rgba(0,0,0,.6); transition: transform 0.2s ease; }
+  html.style-bold body.modal-open nav { transform: translateX(-50%) translateY(calc(100% + 32px)); pointer-events: none; }
   html.style-bold #view-today, html.style-bold .view { padding-bottom: calc(96px + var(--safe-bottom)); }
   html.style-bold.theme-light { --accent: #5fbf00; --bg: #f7f7f4; --bg3: #ebebe6; --bg2: #f7f7f4; --border: #e0e0da; --text: #111; --muted: #666; --kcal: #5fbf00; }
   html.style-bold.theme-light nav { background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,.12); }
@@ -1331,7 +1332,7 @@
         <span id="data-chevron" style="font-size:12px;">▶</span>
       </div>
       <div id="data-body" style="display:none;">
-        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-02.1-beta</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-02.2-beta</div>
         <button class="btn btn-secondary" onclick="checkForUpdate()">Check for Updates</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="exportData()">Export JSON</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="importData()">Import JSON</button>
@@ -4236,6 +4237,17 @@ document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
   });
 });
 
+// Hide Bold nav when any modal/overlay is open
+new MutationObserver(function() {
+  const hasModal = !!(
+    document.querySelector('.modal-backdrop.open') ||
+    document.querySelector('#tour-welcome-backdrop.open') ||
+    document.querySelector('#tour-overlay.active') ||
+    document.querySelector('#macro-breakdown-modal[style*="block"]')
+  );
+  document.body.classList.toggle('modal-open', hasModal);
+}).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class', 'style', 'open'] });
+
 // ═══════════════════════════════════════════════════
 //  UTILITIES
 // ═══════════════════════════════════════════════════
@@ -4829,6 +4841,19 @@ function applyStyle(style) {
     b.className = s === style ? 'btn btn-primary' : 'btn btn-secondary';
     b.style.fontSize = '12px';
   });
+  const themeColorMap = {
+    'current': '#0f0f13',
+    'bold': '#0d0d0d',
+    'soft': '#1c1424',
+    'editorial': '#f5f0e8',
+    'zen': '#1a1a22',
+    'gradient': '#2b2260',
+    'retro': '#0a0a0a'
+  };
+  const tc = themeColorMap[style] || '#0f0f13';
+  let tcMeta = document.querySelector('meta[name="theme-color"]');
+  if (!tcMeta) { tcMeta = document.createElement('meta'); tcMeta.name = 'theme-color'; document.head.appendChild(tcMeta); }
+  tcMeta.content = tc;
 }
 function setStyle(style) {
   localStorage.setItem('mt_style', style);
