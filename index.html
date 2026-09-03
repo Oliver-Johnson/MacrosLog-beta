@@ -146,6 +146,7 @@
   .recipe-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; cursor: pointer; }
   .recipe-name { font-size: 15px; font-weight: 600; }
   .recipe-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .recipe-draft-badge { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: rgba(250,204,21,0.15); color: #facc15; border: 1px solid rgba(250,204,21,0.3); border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
   .ingredient-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
   .ingredient-row:last-child { border-bottom: none; }
 
@@ -196,7 +197,7 @@
   .water-progress-track { width: 100%; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin: 8px 0; }
   .water-progress-fill { height: 100%; background: #38bdf8; border-radius: 4px; transition: width 0.4s ease; }
   .water-btns { display: flex; gap: 8px; margin-top: 8px; }
-  .water-btn { flex: 1; background: var(--bg3); border: 1px solid var(--border); color: #38bdf8; border-radius: 8px; padding: 7px 4px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; }
+  .water-btn { flex: 1; background: var(--bg3); border: 1px solid var(--accent); color: var(--accent); border-radius: 8px; padding: 7px 4px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; }
   .water-btn:active { opacity: 0.7; }
   .water-custom-row { display: none; margin-top: 8px; gap: 8px; align-items: center; }
   .water-custom-row.open { display: flex; }
@@ -785,7 +786,7 @@
         <button class="water-btn" onclick="addWater(250)">+250ml</button>
         <button class="water-btn" onclick="addWater(500)">+500ml</button>
         <button class="water-btn" onclick="addWater(750)">+750ml</button>
-        <button class="water-btn" onclick="toggleWaterCustom()" style="color:var(--muted);flex:0 0 auto;padding:7px 10px;">+ml</button>
+        <button class="water-btn" onclick="toggleWaterCustom()" style="color:var(--text);border-color:var(--border);flex:0 0 auto;padding:7px 10px;">+ml</button>
       </div>
       <div class="water-custom-row" id="water-custom-row">
         <input type="number" id="water-custom-input" placeholder="ml" min="1" max="2000" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:6px 10px;font-size:14px;outline:none;" onkeydown="if(event.key==='Enter')addWaterCustom()">
@@ -1332,7 +1333,7 @@
         <span id="data-chevron" style="font-size:12px;">▶</span>
       </div>
       <div id="data-body" style="display:none;">
-        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.1-beta</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.2-beta</div>
         <button class="btn btn-secondary" onclick="checkForUpdate()">Check for Updates</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="exportData()">Export JSON</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="importData()">Import JSON</button>
@@ -1838,7 +1839,8 @@
       </div>
     </div>
     <div id="recipe-nutrition-preview" style="font-size:12px; color:var(--muted); margin-bottom:12px;"></div>
-    <button class="btn btn-primary" onclick="saveRecipe()">Save Recipe</button>
+    <button id="save-recipe-btn" class="btn btn-primary" onclick="saveRecipe()">Save Recipe</button>
+    <button id="save-draft-btn" class="btn btn-secondary" style="margin-top:8px;display:none;" onclick="saveRecipeAsDraft()">Save as Draft</button>
     <button id="recipe-clear-draft-btn" class="btn btn-secondary" style="margin-top:8px;display:none;" onclick="clearRecipeDraft()">Clear draft</button>
   </div>
 </div>
@@ -3225,6 +3227,17 @@ function renderRecipes() {
   }
   el.innerHTML = recipes.map((r, i) => {
     const n = r.totalNutrition;
+    if (r.draft) {
+      return `<div class="recipe-card" onclick="openEditRecipe(${i})">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div>
+            <div class="recipe-name">${esc(r.name)}<span class="recipe-draft-badge">Draft</span></div>
+            <div class="recipe-meta">Tap to complete</div>
+          </div>
+          <button class="btn-icon" onclick="event.stopPropagation();openEditRecipe(${i})" style="color:var(--accent2);font-size:12px;padding:4px 8px;">Edit</button>
+        </div>
+      </div>`;
+    }
     return `<div class="recipe-card" onclick="showRecipeOptions(${i})">
       <div style="display:flex;justify-content:space-between;align-items:start;">
         <div>
@@ -3310,6 +3323,7 @@ function openCreateRecipe() {
     document.getElementById('recipe-clear-draft-btn').style.display = 'none';
   }
   renderRecipeIngredients();
+  updateRecipeSaveButtons();
   openModal('recipe-edit-modal');
 }
 
@@ -3323,6 +3337,7 @@ function openEditRecipe(i) {
   document.getElementById('recipe-name-input').value = r.name;
   document.getElementById('recipe-total-weight').value = r.totalWeight || '';
   renderRecipeIngredients();
+  updateRecipeSaveButtons();
   openModal('recipe-edit-modal');
 }
 
@@ -3341,6 +3356,7 @@ function renderRecipeIngredients() {
       <button class="btn-icon" onclick="removeIngredient(${i})">✕</button>
     </div>`).join('');
   updateRecipePreview();
+  updateRecipeSaveButtons();
 }
 
 function removeIngredient(i) {
@@ -3604,6 +3620,56 @@ function saveRecipe() {
   closeModal('recipe-edit-modal');
   renderRecipes();
   toast('Recipe saved!');
+}
+
+function updateRecipeSaveButtons() {
+  const name = document.getElementById('recipe-name-input').value.trim();
+  const hasIngredients = editingRecipeIngredients && editingRecipeIngredients.length > 0;
+  const totalWeight = parseFloat(document.getElementById('recipe-total-weight').value);
+  const hasWeight = !isNaN(totalWeight) && totalWeight > 0;
+  const isValid = hasIngredients && hasWeight;
+
+  const saveBtn = document.getElementById('save-recipe-btn');
+  const draftBtn = document.getElementById('save-draft-btn');
+  if (saveBtn) saveBtn.style.display = isValid ? '' : 'none';
+  if (draftBtn) draftBtn.style.display = (!isValid && name) ? '' : 'none';
+}
+
+function saveRecipeAsDraft() {
+  const name = document.getElementById('recipe-name-input').value.trim();
+  if (!name) { toast('Add a recipe name first'); return; }
+
+  const recipes = getRecipes();
+  const draftId = editingRecipe ? editingRecipe.id : uid();
+  const totalWeight = parseFloat(document.getElementById('recipe-total-weight').value) || 0;
+
+  // Compute partial nutrition for any ingredients already added
+  const totalNutrition = editingRecipeIngredients.reduce((acc, ing) => {
+    const f = ing.weight / 100;
+    return { kcal: acc.kcal + ing.kcal * f, protein: acc.protein + ing.protein * f,
+             carbs: acc.carbs + ing.carbs * f, fat: acc.fat + ing.fat * f };
+  }, { kcal:0, protein:0, carbs:0, fat:0 });
+
+  const draft = {
+    id: draftId,
+    name,
+    ingredients: editingRecipeIngredients.slice(),
+    totalWeight,
+    totalNutrition,
+    draft: true,
+    savedAt: new Date().toISOString()
+  };
+
+  const existingIdx = recipes.findIndex(r => r.id === draftId);
+  if (existingIdx >= 0) recipes[existingIdx] = draft;
+  else recipes.push(draft);
+
+  LS.set('mt_recipes', recipes);
+  localStorage.removeItem('mt_recipe_draft');
+  document.getElementById('recipe-clear-draft-btn').style.display = 'none';
+  closeModal('recipe-edit-modal');
+  renderRecipes();
+  toast('Saved as draft');
 }
 
 // ═══════════════════════════════════════════════════
@@ -4740,7 +4806,10 @@ function prefillManualForm(nutrition) {
 
 // ─── Recipe draft autosave ───
 function saveRecipeDraft() {
-  if (editingRecipe) return; // Only save for new recipes
+  if (editingRecipe) {
+    updateRecipeSaveButtons();
+    return; // Only autosave for new recipes, but still update buttons for edits
+  }
   const draft = {
     name: document.getElementById('recipe-name-input').value,
     totalWeight: document.getElementById('recipe-total-weight').value,
@@ -4750,6 +4819,7 @@ function saveRecipeDraft() {
   };
   localStorage.setItem('mt_recipe_draft', JSON.stringify(draft));
   document.getElementById('recipe-clear-draft-btn').style.display = '';
+  updateRecipeSaveButtons();
 }
 
 function clearRecipeDraft() {
