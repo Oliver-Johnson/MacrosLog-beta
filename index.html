@@ -607,6 +607,25 @@
     html.style-gradient.theme-auto .water-card,
     html.style-gradient.theme-auto .exercise-card { background: rgba(255,255,255,.5); border-color: rgba(150,120,180,.18); }
   }
+  html.style-gradient .stat-chip {
+    background: rgba(255,255,255,.06); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-color: rgba(255,255,255,.12);
+  }
+  html.style-gradient #today-streak-weight-row > div:last-child {
+    background: rgba(255,255,255,.06) !important; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-color: rgba(255,255,255,.12) !important;
+  }
+  html.style-gradient #dashboard-card .btn-secondary {
+    background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.15);
+  }
+  html.style-gradient #diary-notes {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: var(--text);
+    border-radius: 10px;
+  }
+  html.style-gradient .kofi-mobile-card {
+    background: rgba(255,255,255,.06); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-color: rgba(255,255,255,.12);
+  }
 
   /* ZEN ─── */
   html.style-zen { --accent:#8ba888; --accent2:#8ba888; --bg:#111112; --bg2:#111112; --bg3:#1a1a1b; --border:#262627; --text:#f2f2f0; --muted:#7a7a78; --kcal:#8ba888; }
@@ -1334,7 +1353,7 @@
         <span id="data-chevron" style="font-size:12px;">▶</span>
       </div>
       <div id="data-body" style="display:none;">
-        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.4-beta</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.5-beta</div>
         <button class="btn btn-secondary" onclick="checkForUpdate()">Check for Updates</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="exportData()">Export JSON</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="importData()">Import JSON</button>
