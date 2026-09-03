@@ -1333,7 +1333,7 @@
         <span id="data-chevron" style="font-size:12px;">▶</span>
       </div>
       <div id="data-body" style="display:none;">
-        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.2-beta</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.3-beta</div>
         <button class="btn btn-secondary" onclick="checkForUpdate()">Check for Updates</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="exportData()">Export JSON</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="importData()">Import JSON</button>
@@ -4309,7 +4309,8 @@ new MutationObserver(function() {
     document.querySelector('.modal-backdrop.open') ||
     document.querySelector('#tour-welcome-backdrop.open') ||
     document.querySelector('#tour-overlay.active') ||
-    document.querySelector('#macro-breakdown-modal[style*="block"]')
+    document.querySelector('#macro-breakdown-modal[style*="block"]') ||
+    document.querySelector('#onboarding-backdrop.open')
   );
   document.body.classList.toggle('modal-open', hasModal);
 }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class', 'style', 'open'] });
