@@ -597,15 +597,79 @@
   }
   html.style-gradient #kcal-ring { stroke: url(#kcalGrad); }
   html.style-gradient body { font-family: 'Manrope',-apple-system,sans-serif; }
-  html.style-gradient.theme-light #app { background: linear-gradient(165deg,#e8e2ff 0%,#dde8ff 50%,#d2f0f5 100%); }
+  html.style-gradient.theme-light #app,
+  html.style-gradient.theme-light body {
+    background: linear-gradient(165deg, #b8aaff 0%, #a8c0ff 50%, #8ee0d8 100%);
+    min-height: 100vh;
+  }
   html.style-gradient.theme-light .card,
   html.style-gradient.theme-light .water-card,
-  html.style-gradient.theme-light .exercise-card { background: rgba(255,255,255,.5); border-color: rgba(150,120,180,.18); }
+  html.style-gradient.theme-light .exercise-card {
+    background: rgba(255,255,255,.72); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-color: rgba(140,110,255,.22); box-shadow: 0 4px 20px rgba(100,80,200,.1);
+  }
+  html.style-gradient.theme-light .stat-chip {
+    background: rgba(255,255,255,.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(140,110,255,.2);
+  }
+  html.style-gradient.theme-light #today-streak-weight-row > div:last-child {
+    background: rgba(255,255,255,.6) !important; border-color: rgba(140,110,255,.2) !important;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  html.style-gradient.theme-light #diary-notes {
+    background: rgba(255,255,255,.6) !important; border-color: rgba(140,110,255,.2) !important;
+  }
+  html.style-gradient.theme-light .kofi-mobile-card {
+    background: rgba(255,255,255,.6); border-color: rgba(140,110,255,.2);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  html.style-gradient.theme-light .btn-secondary,
+  html.style-gradient.theme-light .water-btn {
+    background: rgba(255,255,255,.6); border-color: rgba(140,110,255,.22);
+  }
+  html.style-gradient.theme-light .bar-track { background: rgba(140,110,255,.18); }
+  html.style-gradient.theme-light input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
+  html.style-gradient.theme-light textarea,
+  html.style-gradient.theme-light select {
+    background: rgba(255,255,255,.65) !important; border-color: rgba(140,110,255,.22) !important;
+    color: var(--text) !important;
+  }
   @media (prefers-color-scheme: light) {
-    html.style-gradient.theme-auto #app { background: linear-gradient(165deg,#e8e2ff 0%,#dde8ff 50%,#d2f0f5 100%); }
+    html.style-gradient.theme-auto #app,
+    html.style-gradient.theme-auto body {
+      background: linear-gradient(165deg, #b8aaff 0%, #a8c0ff 50%, #8ee0d8 100%);
+      min-height: 100vh;
+    }
     html.style-gradient.theme-auto .card,
     html.style-gradient.theme-auto .water-card,
-    html.style-gradient.theme-auto .exercise-card { background: rgba(255,255,255,.5); border-color: rgba(150,120,180,.18); }
+    html.style-gradient.theme-auto .exercise-card {
+      background: rgba(255,255,255,.72); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-color: rgba(140,110,255,.22); box-shadow: 0 4px 20px rgba(100,80,200,.1);
+    }
+    html.style-gradient.theme-auto .stat-chip {
+      background: rgba(255,255,255,.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-color: rgba(140,110,255,.2);
+    }
+    html.style-gradient.theme-auto #today-streak-weight-row > div:last-child {
+      background: rgba(255,255,255,.6) !important; border-color: rgba(140,110,255,.2) !important;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    html.style-gradient.theme-auto #diary-notes {
+      background: rgba(255,255,255,.6) !important; border-color: rgba(140,110,255,.2) !important;
+    }
+    html.style-gradient.theme-auto .kofi-mobile-card {
+      background: rgba(255,255,255,.6); border-color: rgba(140,110,255,.2);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    html.style-gradient.theme-auto .btn-secondary,
+    html.style-gradient.theme-auto .water-btn { background: rgba(255,255,255,.6); border-color: rgba(140,110,255,.22); }
+    html.style-gradient.theme-auto .bar-track { background: rgba(140,110,255,.18); }
+    html.style-gradient.theme-auto input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
+    html.style-gradient.theme-auto textarea,
+    html.style-gradient.theme-auto select {
+      background: rgba(255,255,255,.65) !important; border-color: rgba(140,110,255,.22) !important;
+      color: var(--text) !important;
+    }
   }
   html.style-gradient .stat-chip {
     background: rgba(255,255,255,.06); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
@@ -645,30 +709,6 @@
   html.style-gradient select {
     background: rgba(255,255,255,.06) !important; border-color: rgba(255,255,255,.15) !important;
     color: var(--text) !important;
-  }
-
-  /* Light mode variants */
-  html.style-gradient.theme-light .btn-secondary,
-  html.style-gradient.theme-light .water-btn {
-    background: rgba(0,0,0,.06); border-color: rgba(0,0,0,.12);
-  }
-  html.style-gradient.theme-light .bar-track { background: rgba(0,0,0,.08); }
-  html.style-gradient.theme-light input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
-  html.style-gradient.theme-light textarea,
-  html.style-gradient.theme-light select {
-    background: rgba(255,255,255,.5) !important; border-color: rgba(0,0,0,.12) !important;
-    color: var(--text) !important;
-  }
-  @media (prefers-color-scheme: light) {
-    html.style-gradient.theme-auto .btn-secondary,
-    html.style-gradient.theme-auto .water-btn { background: rgba(0,0,0,.06); border-color: rgba(0,0,0,.12); }
-    html.style-gradient.theme-auto .bar-track { background: rgba(0,0,0,.08); }
-    html.style-gradient.theme-auto input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
-    html.style-gradient.theme-auto textarea,
-    html.style-gradient.theme-auto select {
-      background: rgba(255,255,255,.5) !important; border-color: rgba(0,0,0,.12) !important;
-      color: var(--text) !important;
-    }
   }
 
   /* ZEN ─── */
@@ -1397,7 +1437,7 @@
         <span id="data-chevron" style="font-size:12px;">▶</span>
       </div>
       <div id="data-body" style="display:none;">
-        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.6-beta</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.7-beta</div>
         <button class="btn btn-secondary" onclick="checkForUpdate()">Check for Updates</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="exportData()">Export JSON</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="importData()">Import JSON</button>
