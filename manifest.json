@@ -7,7 +7,7 @@
   "id": "/beta-macroslog/",
   "display": "standalone",
   "background_color": "#0f0f13",
-  "theme_color": "#6c63ff",
+  "theme_color": "#0f0f13",
   "orientation": "portrait",
   "icons": [
     { "src": "/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
