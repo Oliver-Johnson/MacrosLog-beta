@@ -138,7 +138,7 @@
   /* ─── Modal ─── */
   .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: flex-end; }
   .modal-backdrop.open { display: flex; }
-  .modal { background: var(--bg2); border-radius: 20px 20px 0 0; padding: 20px 16px calc(20px + var(--safe-bottom)); width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal { background: var(--bg2); border-radius: 20px 20px 0 0; padding: 20px 16px calc(80px + var(--safe-bottom)); width: 100%; max-height: 90vh; overflow-y: auto; }
   .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
   .modal-close { float: right; background: var(--bg3); border: none; color: var(--muted); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 16px; }
 
@@ -1437,7 +1437,8 @@
         <span id="data-chevron" style="font-size:12px;">▶</span>
       </div>
       <div id="data-body" style="display:none;">
-        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; margin-top:10px;">Version 2026-09-03.8-beta</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:4px; margin-top:10px;">Version 2026-10-07.1-beta</div>
+        <p style="margin:4px 0 10px;font-size:0.75rem;color:var(--muted)">You're on the beta. The stable app is at <a href="https://macroslog.co.uk" target="_blank" style="color:var(--accent);text-decoration:none">macroslog.co.uk</a></p>
         <button class="btn btn-secondary" onclick="checkForUpdate()">Check for Updates</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="exportData()">Export JSON</button>
         <button class="btn btn-secondary" style="margin-top:8px;" onclick="importData()">Import JSON</button>
@@ -4286,6 +4287,8 @@ function syncFoodLog() {
     .catch(() => toast('Sync failed — server offline?'));
 }
 
+// Fibre fallbacks by food name. These used to be added to every user's custom
+// foods on launch; they are now only a lookup, so users' food lists stay their own.
 const SEED_FOODS = [
   { name: 'Brown Basmati Rice (raw)',    kcal: 356, protein: 7.9,  carbs: 72.8, fat: 2.7,  fibre: 3.5,  sugar: 0.7, sodium: 0,    defaultWeight: 75  },
   { name: 'Brown Basmati Rice (cooked)', kcal: 137, protein: 2.9,  carbs: 27.5, fat: 1.0,  fibre: 1.4,  sugar: 0.3, sodium: 0,    defaultWeight: 150 },
@@ -4303,23 +4306,6 @@ const SEED_FOODS = [
 // Lookup table by normalised name for patching fibre at log time
 const FIBRE_LOOKUP = {};
 for (const s of SEED_FOODS) FIBRE_LOOKUP[s.name.toLowerCase()] = s.fibre;
-
-function seedCustomFoods() {
-  const customs = getCustomFoods();
-  let changed = false;
-  for (const seed of SEED_FOODS) {
-    const idx = customs.findIndex(f => f.name === seed.name);
-    if (idx === -1) {
-      customs.push({ id: uid(), ...seed, barcode: null });
-      changed = true;
-    } else if (!customs[idx].fibre && seed.fibre) {
-      // Update existing entry that has fibre=0 with correct value
-      customs[idx] = { ...customs[idx], fibre: seed.fibre, sugar: seed.sugar ?? customs[idx].sugar, sodium: seed.sodium ?? customs[idx].sodium };
-      changed = true;
-    }
-  }
-  if (changed) LS.set('mt_custom_foods', customs);
-}
 
 function fetchSyncFoodLog() {
   const syncUrl = getSyncUrl();
@@ -4737,7 +4723,6 @@ const TOUR_DEMO_KEY = 'mt_tour_demo_active';
 
 deduplicateLogs();
 recordTodayTargets();
-seedCustomFoods();
 applyDisplayPrefs();
 renderToday();
 fetchSyncTargets();
